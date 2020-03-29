@@ -4,7 +4,7 @@
     :center="center"
     :zoom="zoom"
     map-type-id="terrain"
-    style="width: 500px; height: 300px"
+    style="width: 1000px; height: 600px"
   >
     <GmapInfoWindow
       :options="infoOptions"
@@ -19,6 +19,7 @@
       :clickable="true"
       @click="toggleInfo(m, i)"
     />
+    <GmapPolyline :path="markers" v-bind:options="{ strokeColor:'#FF0000'}"></GmapPolyline>
   </GmapMap>
 </template>
 
@@ -46,12 +47,15 @@ export default {
   },
   methods: {
     ...mapActions(["$fetchLocations"]),
+    /**CALCULATE CENTER */
     rad2degr(rad) {
       return (rad * 180) / Math.PI;
     },
+    /**CALCULATE CENTER */
     degr2rad(degr) {
       return (degr * Math.PI) / 180;
     },
+    /**CALCULATE CENTER */
     /**
      * @param latLngInDeg array of arrays with latitude and longtitude
      *   pairs in degrees. e.g. [[latitude1, longtitude1], [latitude2
@@ -87,21 +91,23 @@ export default {
 
       return { lat: this.rad2degr(lat), lng: this.rad2degr(lng) };
     },
-
+    /**MARKER CLICK */
     toggleInfo(m, i) {
       this.infoPosition = m;
-      this.infoContent = m.date.toLocaleString();
+      let info = "";
+      info += `Date: ${m.date.toLocaleString()}\n`;
+      info += `Speed: ${m.speed}\n`;
+      info += `Satellites: ${m.satellites}`;
+
+      this.infoContent = info;
       if (this.infoCurrentKey == i) {
         this.infoOpened = !this.infoOpened;
       } else {
         this.infoOpened = true;
         this.infoCurrentKey = i;
       }
-
-      console.log(this.google);
-      let direction = new this.google.maps.DirectionsService();
-      console.log(direction);
     },
+    /** CALCULATE ZOOM */
     calculateBounds(markers) {
       let bounds = new this.google.maps.LatLngBounds();
       markers.forEach(m => {
@@ -109,6 +115,7 @@ export default {
       });
       return bounds;
     },
+    /** CALCULATE ZOOM */
     getBoundsZoomLevel(bounds, mapDim) {
       var WORLD_DIM = { height: 256, width: 256 };
       var ZOOM_MAX = 21;
@@ -147,13 +154,15 @@ export default {
         return {
           lat: Number(loc.latitude),
           lng: Number(loc.longitude),
-          date: new Date(loc.createdAt)
+          date: new Date(loc.createdAt),
+          speed: loc.speed,
+          satellites: loc.satellites
         };
       });
       this.center = this.getLatLngCenter(this.markers.map(m => [m.lat, m.lng]));
       this.zoom = this.getBoundsZoomLevel(this.calculateBounds(this.markers), {
-        height: 300,
-        width: 500
+        height: 600,
+        width: 1000
       });
     }
   },

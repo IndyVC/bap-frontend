@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Maps/>
+    <Maps />
   </div>
 </template>
 
@@ -8,20 +8,31 @@
 import Maps from "./components/Maps";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Maps
   }
-}
+};
 </script>
 
 <style>
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: #4a4a4a;
 }
 </style>
