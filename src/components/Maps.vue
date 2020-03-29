@@ -1,6 +1,7 @@
 <template>
-  <section class="container card">
+  <section class="container">
     <GmapMap
+      v-if="getLocations.length>0"
       ref="gmap"
       :center="center"
       :zoom="zoom"
@@ -24,6 +25,9 @@
       />
       <GmapPolyline :path="markers" v-bind:options="{ strokeColor:'#FF0000'}"></GmapPolyline>
     </GmapMap>
+    <div v-else>
+      <p>No locations yet!</p>
+    </div>
   </section>
 </template>
 
@@ -176,7 +180,9 @@ export default {
     }
   },
   created() {
-    this.$fetchLocations();
+    window.setInterval(() => {
+      this.$fetchLocations();
+    }, 5000);
   }
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <section class="card">
+  <section class="card" v-if="getLocations.length>0">
     <div class="padding-15">
       <div>
         <div class="columns has-text-left">
