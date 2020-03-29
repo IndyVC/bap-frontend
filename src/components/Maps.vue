@@ -180,9 +180,9 @@ export default {
     }
   },
   created() {
-    window.setInterval(() => {
-      this.$fetchLocations();
-    }, 5000);
+    // window.setInterval(() => {
+    //   this.$fetchLocations();
+    // }, 5000);
   }
 };
 </script>
