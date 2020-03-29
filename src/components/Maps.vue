@@ -11,7 +11,9 @@
       :position="infoPosition"
       :opened="infoOpened"
       @closeclick="infoOpened=false"
-    >{{infoContent}}</GmapInfoWindow>
+    >
+      <span v-html="infoContent" class="has-text-left"></span>
+    </GmapInfoWindow>
     <GmapMarker
       :key="i"
       v-for="(m, i) in markers"
@@ -94,11 +96,9 @@ export default {
     /**MARKER CLICK */
     toggleInfo(m, i) {
       this.infoPosition = m;
-      let info = "";
-      info += `Date: ${m.date.toLocaleString()}\n`;
-      info += `Speed: ${m.speed}\n`;
-      info += `Satellites: ${m.satellites}`;
-
+      const info = `<p>Date: ${m.date.toLocaleString() ?? "unknown"} <br/>
+      Speed: ${m.speed ?? "unknown"} <br/>
+      Satellites: ${m.satellites ?? "unknown"} </p>`;
       this.infoContent = info;
       if (this.infoCurrentKey == i) {
         this.infoOpened = !this.infoOpened;
@@ -173,4 +173,7 @@ export default {
 </script>
 
 <style>
+.has-text-left {
+  text-align: left;
+}
 </style>
