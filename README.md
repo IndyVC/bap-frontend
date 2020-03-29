@@ -1,24 +1,6 @@
-# bap-frontend
+# indy-bap-frontend
 
 ## Project setup
-```
-yarn install
-```
+Project created in Vue with vue2-google-maps dependency.
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Project is deployed on: https://indy-bap-frontend.netlify.com/ using Netlify
