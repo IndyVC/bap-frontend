@@ -37,7 +37,7 @@ import { gmapApi } from "vue2-google-maps";
 
 export default {
   mounted() {
-    this.init();
+    this.createMap();
   },
   data() {
     return {
@@ -53,7 +53,8 @@ export default {
           width: 0,
           height: -35
         }
-      }
+      },
+      flag: false
     };
   },
   methods: {
@@ -122,13 +123,11 @@ export default {
       markers.forEach(m => {
         bounds.extend(m);
       });
+      this.flag = true;
       return bounds;
     },
     /** CALCULATE ZOOM */
     getBoundsZoomLevel(bounds, mapDim) {
-      var WORLD_DIM = { height: 256, width: 256 };
-      var ZOOM_MAX = 21;
-
       function latRad(lat) {
         var sin = Math.sin((lat * Math.PI) / 180);
         var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
@@ -138,6 +137,8 @@ export default {
       function zoom(mapPx, worldPx, fraction) {
         return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
       }
+      var WORLD_DIM = { height: 256, width: 256 };
+      var ZOOM_MAX = 21;
 
       var ne = bounds.getNorthEast();
       var sw = bounds.getSouthWest();
@@ -153,7 +154,7 @@ export default {
       return Math.min(latZoom, lngZoom, ZOOM_MAX);
     },
 
-    init() {
+    createMap() {
       this.markers = this.getLocations.map(loc => {
         return {
           lat: Number(loc.latitude),
@@ -175,8 +176,11 @@ export default {
     google: gmapApi
   },
   watch: {
+    google() {
+      this.createMap();
+    },
     getLocations() {
-      this.init();
+      this.createMap();
     }
   },
   created() {
