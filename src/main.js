@@ -3,6 +3,8 @@ import App from "./App.vue";
 import store from "./store/index";
 import * as VueGoogleMaps from "vue2-google-maps";
 
+require("./styles/main.scss");
+
 Vue.use(VueGoogleMaps, {
   load: {
     key: "AIzaSyAbvjSIFZ5jJqopl330QpfFtIDyWYTxhIg",

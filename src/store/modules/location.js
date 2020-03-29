@@ -14,6 +14,11 @@ const actions = {
       "https://indy-bap-backend.herokuapp.com/api/locations"
     );
     commit("SET_LOCATIONS", response.data.data);
+  },
+
+  async $deleteLocations({ commit }) {
+    await axios.delete("https://indy-bap-backend.herokuapp.com/api/locations");
+    commit("SET_LOCATIONS", []);
   }
 };
 

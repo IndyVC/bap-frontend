@@ -1,28 +1,30 @@
 <template>
-  <GmapMap
-    ref="gmap"
-    :center="center"
-    :zoom="zoom"
-    map-type-id="terrain"
-    style="width: 1000px; height: 600px"
-  >
-    <GmapInfoWindow
-      :options="infoOptions"
-      :position="infoPosition"
-      :opened="infoOpened"
-      @closeclick="infoOpened=false"
+  <section class="container card">
+    <GmapMap
+      ref="gmap"
+      :center="center"
+      :zoom="zoom"
+      map-type-id="terrain"
+      style="width: 80vw; height: 80vh;"
     >
-      <span v-html="infoContent" class="has-text-left"></span>
-    </GmapInfoWindow>
-    <GmapMarker
-      :key="i"
-      v-for="(m, i) in markers"
-      :position="m"
-      :clickable="true"
-      @click="toggleInfo(m, i)"
-    />
-    <GmapPolyline :path="markers" v-bind:options="{ strokeColor:'#FF0000'}"></GmapPolyline>
-  </GmapMap>
+      <GmapInfoWindow
+        :options="infoOptions"
+        :position="infoPosition"
+        :opened="infoOpened"
+        @closeclick="infoOpened=false"
+      >
+        <span v-html="infoContent" class="has-text-left"></span>
+      </GmapInfoWindow>
+      <GmapMarker
+        :key="i"
+        v-for="(m, i) in markers"
+        :position="m"
+        :clickable="true"
+        @click="toggleInfo(m, i)"
+      />
+      <GmapPolyline :path="markers" v-bind:options="{ strokeColor:'#FF0000'}"></GmapPolyline>
+    </GmapMap>
+  </section>
 </template>
 
 <script>
@@ -30,6 +32,9 @@ import { mapGetters, mapActions } from "vuex";
 import { gmapApi } from "vue2-google-maps";
 
 export default {
+  mounted() {
+    this.init();
+  },
   data() {
     return {
       markers: [],
@@ -142,14 +147,9 @@ export default {
       var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
 
       return Math.min(latZoom, lngZoom, ZOOM_MAX);
-    }
-  },
-  computed: {
-    ...mapGetters(["getLocations"]),
-    google: gmapApi
-  },
-  watch: {
-    getLocations() {
+    },
+
+    init() {
       this.markers = this.getLocations.map(loc => {
         return {
           lat: Number(loc.latitude),
@@ -166,14 +166,24 @@ export default {
       });
     }
   },
+  computed: {
+    ...mapGetters(["getLocations"]),
+    google: gmapApi
+  },
+  watch: {
+    getLocations() {
+      this.init();
+    }
+  },
   created() {
     this.$fetchLocations();
   }
 };
 </script>
 
-<style>
-.has-text-left {
-  text-align: left;
+<style scoped>
+.container {
+  box-sizing: border-box;
+  margin: 20px;
 }
 </style>

@@ -1,16 +1,19 @@
 <template>
-  <div id="app">
-    <Maps />
+  <div id="app" class="tile is-ancestor">
+    <Maps class="tile is-6" />
+    <Controls class="tile is-6" />
   </div>
 </template>
 
 <script>
 import Maps from "./components/Maps";
+import Controls from "./components/Controls";
 
 export default {
   name: "App",
   components: {
-    Maps
+    Maps,
+    Controls
   }
 };
 </script>
@@ -26,13 +29,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
   width: 100vw;
-  background-color: #4a4a4a;
 }
 </style>
