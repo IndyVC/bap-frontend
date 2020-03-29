@@ -1,0 +1,167 @@
+<template>
+  <GmapMap
+    ref="gmap"
+    :center="center"
+    :zoom="zoom"
+    map-type-id="terrain"
+    style="width: 500px; height: 300px"
+  >
+    <GmapInfoWindow
+      :options="infoOptions"
+      :position="infoPosition"
+      :opened="infoOpened"
+      @closeclick="infoOpened=false"
+    >{{infoContent}}</GmapInfoWindow>
+    <GmapMarker
+      :key="i"
+      v-for="(m, i) in markers"
+      :position="m"
+      :clickable="true"
+      @click="toggleInfo(m, i)"
+    />
+  </GmapMap>
+</template>
+
+<script>
+import { mapGetters, mapActions } from "vuex";
+import { gmapApi } from "vue2-google-maps";
+
+export default {
+  data() {
+    return {
+      markers: [],
+      center: { lat: 10, lng: 10 },
+      zoom: 7,
+      infoPosition: null,
+      infoContent: null,
+      infoOpened: false,
+      infoCurrentKey: null,
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35
+        }
+      }
+    };
+  },
+  methods: {
+    ...mapActions(["$fetchLocations"]),
+    rad2degr(rad) {
+      return (rad * 180) / Math.PI;
+    },
+    degr2rad(degr) {
+      return (degr * Math.PI) / 180;
+    },
+    /**
+     * @param latLngInDeg array of arrays with latitude and longtitude
+     *   pairs in degrees. e.g. [[latitude1, longtitude1], [latitude2
+     *   [longtitude2] ...]
+     *
+     * @return array with the center latitude longtitude pairs in
+     *   degrees.
+     */
+    getLatLngCenter(latLngInDegr) {
+      let LATIDX = 0;
+      let LNGIDX = 1;
+      let sumX = 0;
+      let sumY = 0;
+      let sumZ = 0;
+
+      for (let i = 0; i < latLngInDegr.length; i++) {
+        let lat = this.degr2rad(latLngInDegr[i][LATIDX]);
+        let lng = this.degr2rad(latLngInDegr[i][LNGIDX]);
+        // sum of cartesian coordinates
+        sumX += Math.cos(lat) * Math.cos(lng);
+        sumY += Math.cos(lat) * Math.sin(lng);
+        sumZ += Math.sin(lat);
+      }
+
+      let avgX = sumX / latLngInDegr.length;
+      let avgY = sumY / latLngInDegr.length;
+      let avgZ = sumZ / latLngInDegr.length;
+
+      // convert average x, y, z coordinate to latitude and longtitude
+      let lng = Math.atan2(avgY, avgX);
+      let hyp = Math.sqrt(avgX * avgX + avgY * avgY);
+      let lat = Math.atan2(avgZ, hyp);
+
+      return { lat: this.rad2degr(lat), lng: this.rad2degr(lng) };
+    },
+
+    toggleInfo(m, i) {
+      this.infoPosition = m;
+      this.infoContent = m.date.toLocaleString();
+      if (this.infoCurrentKey == i) {
+        this.infoOpened = !this.infoOpened;
+      } else {
+        this.infoOpened = true;
+        this.infoCurrentKey = i;
+      }
+
+      console.log(this.google);
+      let direction = new this.google.maps.DirectionsService();
+      console.log(direction);
+    },
+    calculateBounds(markers) {
+      let bounds = new this.google.maps.LatLngBounds();
+      markers.forEach(m => {
+        bounds.extend(m);
+      });
+      return bounds;
+    },
+    getBoundsZoomLevel(bounds, mapDim) {
+      var WORLD_DIM = { height: 256, width: 256 };
+      var ZOOM_MAX = 21;
+
+      function latRad(lat) {
+        var sin = Math.sin((lat * Math.PI) / 180);
+        var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+        return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+      }
+
+      function zoom(mapPx, worldPx, fraction) {
+        return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+      }
+
+      var ne = bounds.getNorthEast();
+      var sw = bounds.getSouthWest();
+
+      var latFraction = (latRad(ne.lat()) - latRad(sw.lat())) / Math.PI;
+
+      var lngDiff = ne.lng() - sw.lng();
+      var lngFraction = (lngDiff < 0 ? lngDiff + 360 : lngDiff) / 360;
+
+      var latZoom = zoom(mapDim.height, WORLD_DIM.height, latFraction);
+      var lngZoom = zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+      return Math.min(latZoom, lngZoom, ZOOM_MAX);
+    }
+  },
+  computed: {
+    ...mapGetters(["getLocations"]),
+    google: gmapApi
+  },
+  watch: {
+    getLocations() {
+      this.markers = this.getLocations.map(loc => {
+        return {
+          lat: Number(loc.latitude),
+          lng: Number(loc.longitude),
+          date: new Date(loc.createdAt)
+        };
+      });
+      this.center = this.getLatLngCenter(this.markers.map(m => [m.lat, m.lng]));
+      this.zoom = this.getBoundsZoomLevel(this.calculateBounds(this.markers), {
+        height: 300,
+        width: 500
+      });
+    }
+  },
+  created() {
+    this.$fetchLocations();
+  }
+};
+</script>
+
+<style>
+</style>
