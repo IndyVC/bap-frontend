@@ -3,8 +3,8 @@
     <div class="padding-15">
       <div>
         <div class="columns has-text-left">
-          <p class="heading column">[GPS/AGPS]:</p>
-          <p class="subtitle column">{{gpsMethod}}/{{agpsMethod}}</p>
+          <p class="heading column">[GPS/GPRS]:</p>
+          <p class="subtitle column">{{gpsMethod}}/{{gprsMethod}}</p>
         </div>
       </div>
       <div>
@@ -79,8 +79,8 @@ export default {
     gpsMethod() {
       return this.getLocations.filter(l => l.method == "GPS").length;
     },
-    agpsMethod() {
-      return this.getLocations.filter(l => l.method == "AGPS").length;
+    gprsMethod() {
+      return this.getLocations.filter(l => l.method == "GPRS").length;
     },
     totalMarkers() {
       return this.getLocations.length;
