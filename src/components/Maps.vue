@@ -54,6 +54,8 @@ export default {
   data() {
     return {
       markers: [],
+      gsm: [],
+      poc: [],
       center: { lat: 10, lng: 10 },
       zoom: 7,
       infoPosition: null,
@@ -66,9 +68,7 @@ export default {
           height: -35
         }
       },
-      flag: false,
-      gsm: [],
-      poc: []
+      flag: false
     };
   },
   methods: {
@@ -189,7 +189,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getLocations"]),
+    ...mapGetters(["getLocations", "getGSM", "getPOC"]),
     google: gmapApi
   },
   watch: {

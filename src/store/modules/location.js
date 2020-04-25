@@ -1,11 +1,15 @@
 import axios from "axios";
 
 const state = {
-  locations: []
+  locations: [],
+  gsm: [],
+  poc: [],
 };
 
 const getters = {
-  getLocations: state => state.locations
+  getLocations: (state) => state.locations,
+  getGSM: (state) => state.gsm,
+  getPOC: (state) => state.poc,
 };
 
 const actions = {
@@ -19,16 +23,20 @@ const actions = {
   async $deleteLocations({ commit }) {
     await axios.delete("https://indy-bap-backend.herokuapp.com/api/locations");
     commit("SET_LOCATIONS", []);
-  }
+  },
 };
 
 const mutations = {
-  SET_LOCATIONS: (state, locs) => (state.locations = locs)
+  SET_LOCATIONS: (state, locs) => {
+    state.locations = locs;
+    state.gsm = locs.filter((l) => l.device == "gsm");
+    state.poc = locs.filter((l) => l.device == "poc");
+  },
 };
 
 export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };
