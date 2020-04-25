@@ -60,7 +60,13 @@
           <p class="subtitle column">{{minSatellites.toFixed(2)}}</p>
         </div>
       </div>
-      <button class="button is-small" @click="deleteLocations()">Clear history</button>
+      <div class="buttons">
+        <button class="button is-small" @click="deleteLocations()">Clear history</button>
+        <button class="button is-small" @click="$toggleMarkers()">Hide all markers</button>
+        <button class="button is-small" @click="$setShow(0)">Show all devices</button>
+        <button class="button is-small" @click="$setShow(1)">Show only PoC</button>
+        <button class="button is-small" @click="$setShow(2)">Show only gsm</button>
+      </div>
     </div>
     <div v-else-if="activeTab==0">
       <p>No data from the proof of concept. You may check gsm-tracker.</p>
@@ -97,8 +103,13 @@
           <p class="subtitle column">{{minSpeedGSM.toFixed(2)}} km\h</p>
         </div>
       </div>
-      <button class="button is-small" @click="deleteLocations()">Clear history</button>
-      <button class="button is-small" @click="$toggleMarkers()">Hide all markers</button>
+      <div class="buttons">
+        <button class="button is-small" @click="deleteLocations()">Clear history</button>
+        <button class="button is-small" @click="$toggleMarkers()">Hide all markers</button>
+        <button class="button is-small" @click="$setShow(0)">Show all devices</button>
+        <button class="button is-small" @click="$setShow(1)">Show only PoC</button>
+        <button class="button is-small" @click="$setShow(2)">Show only gsm</button>
+      </div>
     </div>
     <div v-else-if="activeTab==1">
       <p>No data from the gsm-tracker. You may check the proof of concept.</p>
@@ -117,7 +128,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["$deleteLocations","$toggleMarkers","$setShow"]),
+    ...mapActions(["$deleteLocations", "$toggleMarkers", "$setShow"]),
     deleteLocations() {
       let result = confirm("Are you sure you want to delete all locations?");
       if (result) {
@@ -224,5 +235,10 @@ export default {
 
 .button {
   margin-top: 20px;
+}
+.controls {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 </style>
