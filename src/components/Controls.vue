@@ -98,6 +98,7 @@
         </div>
       </div>
       <button class="button is-small" @click="deleteLocations()">Clear history</button>
+      <button class="button is-small" @click="$toggleMarkers()">Hide all markers</button>
     </div>
     <div v-else-if="activeTab==1">
       <p>No data from the gsm-tracker. You may check the proof of concept.</p>
@@ -116,7 +117,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["$deleteLocations"]),
+    ...mapActions(["$deleteLocations","$toggleMarkers","$setShow"]),
     deleteLocations() {
       let result = confirm("Are you sure you want to delete all locations?");
       if (result) {

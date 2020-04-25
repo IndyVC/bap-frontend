@@ -16,25 +16,33 @@
       >
         <span v-html="infoContent" class="has-text-left"></span>
       </GmapInfoWindow>
-      <GmapMarker
-        :key="i"
-        v-for="(m, i) in gsm"
-        :position="m"
-        :clickable="true"
-        @click="toggleInfo(m, i)"
-        icon="http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-      />
-      <GmapPolyline :path="gsm" v-bind:options="{ strokeColor:'#FF0000'}"></GmapPolyline>
-      <GmapMarker
-        :key="-i-1"
-        v-for="(m, i) in poc"
-        :position="m"
-        :clickable="true"
-        @click="toggleInfo(m, i)"
-        icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-      />
-      <GmapPolyline :path="poc" v-bind:options="{ strokeColor:'#0000FF'}"></GmapPolyline>
-    </GmapMap>
+      <div v-if="getShow==0 || getShow==2">
+        <div v-if="getShowMarkers">
+          <GmapMarker
+            :key="i"
+            v-for="(m, i) in getGSM"
+            :position="m"
+            :clickable="true"
+            @click="toggleInfo(m, i)"
+            icon="http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+          />
+        </div>
+        <GmapPolyline :path="getGSM" v-bind:options="{ strokeColor:'#FF0000'}"></GmapPolyline>
+        </div>
+      <div v-if="getShow==0 || getShow==1">
+        <div v-if="getShowMarkers">
+          <GmapMarker
+            :key="-i-1"
+            v-for="(m, i) in getPOC"
+            :position="m"
+            :clickable="true"
+            @click="toggleInfo(m, i)"
+            icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+          />
+        </div>
+        <GmapPolyline :path="getPOC" v-bind:options="{ strokeColor:'#0000FF'}"></GmapPolyline>
+     </div>
+   </GmapMap>
     <div v-else>
       <p>No locations yet!</p>
     </div>
@@ -54,8 +62,6 @@ export default {
   data() {
     return {
       markers: [],
-      gsm: [],
-      poc: [],
       center: { lat: 10, lng: 10 },
       zoom: 7,
       infoPosition: null,
@@ -184,12 +190,10 @@ export default {
         height: 600,
         width: 1000
       });
-      this.gsm = this.markers.filter(m => m.device == "gsm");
-      this.poc = this.markers.filter(m => m.device == "poc");
     }
   },
   computed: {
-    ...mapGetters(["getLocations", "getGSM", "getPOC"]),
+    ...mapGetters(["getLocations", "getGSM", "getPOC","getShow","getShowMarkers"]),
     google: gmapApi
   },
   watch: {
