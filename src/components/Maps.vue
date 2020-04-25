@@ -18,12 +18,22 @@
       </GmapInfoWindow>
       <GmapMarker
         :key="i"
-        v-for="(m, i) in markers"
+        v-for="(m, i) in gsm"
         :position="m"
         :clickable="true"
         @click="toggleInfo(m, i)"
+        icon="http://maps.google.com/mapfiles/ms/icons/red-dot.png"
       />
-      <GmapPolyline :path="markers" v-bind:options="{ strokeColor:'#FF0000'}"></GmapPolyline>
+      <GmapPolyline :path="gsm" v-bind:options="{ strokeColor:'#FF0000'}"></GmapPolyline>
+      <GmapMarker
+        :key="-i-1"
+        v-for="(m, i) in poc"
+        :position="m"
+        :clickable="true"
+        @click="toggleInfo(m, i)"
+        icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+      />
+      <GmapPolyline :path="poc" v-bind:options="{ strokeColor:'#0000FF'}"></GmapPolyline>
     </GmapMap>
     <div v-else>
       <p>No locations yet!</p>
@@ -34,11 +44,13 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { gmapApi } from "vue2-google-maps";
+//import GmapCustomMarker from 'vue2-gmap-custom-marker';
 
 export default {
   mounted() {
     this.createMap();
   },
+  components: {},
   data() {
     return {
       markers: [],
@@ -54,7 +66,9 @@ export default {
           height: -35
         }
       },
-      flag: false
+      flag: false,
+      gsm: [],
+      poc: []
     };
   },
   methods: {
@@ -161,7 +175,8 @@ export default {
           lng: Number(loc.longitude),
           date: new Date(loc.createdAt),
           speed: loc.speed,
-          satellites: loc.satellites
+          satellites: loc.satellites,
+          device: loc.device
         };
       });
       this.center = this.getLatLngCenter(this.markers.map(m => [m.lat, m.lng]));
@@ -169,6 +184,8 @@ export default {
         height: 600,
         width: 1000
       });
+      this.gsm = this.markers.filter(m => m.device == "gsm");
+      this.poc = this.markers.filter(m => m.device == "poc");
     }
   },
   computed: {
