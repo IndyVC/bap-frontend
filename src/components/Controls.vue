@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="buttons">
-        <button class="button is-small" @click="deleteLocations()" disabled>Clear history</button>
+        <button class="button is-small" @click="deleteLocations()">Clear history</button>
         <button class="button is-small" @click="$toggleMarkers()">Hide all markers</button>
         <button class="button is-small" @click="$setShow(0)">Show all devices</button>
         <button class="button is-small" @click="$setShow(1)">Show only PoC</button>
