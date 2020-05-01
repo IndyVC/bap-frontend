@@ -149,52 +149,121 @@ export default {
     },
     recentMarker() {
       return new Date(
-        this.getPOC[this.getPOC.length - 1].createdAt
+        this.getPOC[this.getPOC.length - 1].date
       ).toLocaleString();
     },
     maxSpeed() {
-      return Math.max(...this.getPOC.map(l => Number(l.speed))) ?? 0;
+      const values = [
+        ...this.getPOC
+          .filter(l => l.speed != undefined && l.speed != null && l.speed >= 0)
+          .map(l => Number(l.speed))
+      ];
+      if (values.length > 0) return Math.max(values) ?? 0;
+      else return 0;
     },
     averageSpeed() {
-      let values = [...this.getPOC.map(l => Number(l.speed))];
-      let sum = values.reduce((previous, current) => (current += previous));
-      let avg = sum / values.length;
-      return avg ?? 0;
+      let values = [
+        ...this.getPOC
+          .filter(l => l.speed != undefined && l.speed != null && l.speed >= 0)
+          .map(l => Number(l.speed))
+      ];
+      if (values.length > 0) {
+        let sum = values.reduce((previous, current) => (current += previous));
+        let avg = sum / values.length;
+        return avg ?? 0;
+      }
+      return 0;
     },
     minSpeed() {
-      return Math.min(...this.getPOC.map(l => Number(l.speed))) ?? 0;
+      const values = [
+        ...this.getPOC
+          .filter(l => l.speed != undefined && l.speed != null && l.speed >= 0)
+          .map(l => Number(l.speed))
+      ];
+      if (values.length > 0) return Math.min(values) ?? 0;
+      else return 0;
     },
     maxSatellites() {
-      return Math.max(...this.getPOC.map(l => Number(l.satellites))) ?? 0;
+      const values = [
+        ...this.getPOC
+          .filter(
+            l =>
+              l.satellites != undefined &&
+              l.satellites != null &&
+              l.satellites >= 0
+          )
+          .map(l => Number(l.satellites))
+      ];
+      if (values.length > 0) return Math.max(values) ?? 0;
+      else return 0;
     },
     averageSatellites() {
-      let values = [...this.getPOC.map(l => Number(l.satellites))];
-      let sum = values.reduce((previous, current) => (current += previous));
-      let avg = sum / values.length;
-      return avg ?? 0;
+      const values = [
+        ...this.getPOC
+          .filter(
+            l =>
+              l.satellites != undefined &&
+              l.satellites != null &&
+              l.satellites >= 0
+          )
+          .map(l => Number(l.satellites))
+      ];
+      if (values.length > 0) {
+        let sum = values.reduce((previous, current) => (current += previous));
+        let avg = sum / values.length;
+        return avg ?? 0;
+      }
+      return 0;
     },
     minSatellites() {
-      return Math.min(...this.getPOC.map(l => Number(l.satellites))) ?? 0;
+      const values = [
+        ...this.getPOC
+          .filter(
+            l =>
+              l.satellites != undefined &&
+              l.satellites != null &&
+              l.satellites >= 0
+          )
+          .map(l => Number(l.satellites))
+      ];
+      if (values.length > 0) return Math.min(values) ?? 0;
+      else return 0;
     },
     totalMarkersGSM() {
       return this.getGSM.length;
     },
     recentMarkerGSM() {
       return new Date(
-        this.getGSM[this.getGSM.length - 1].createdAt
+        this.getGSM[this.getGSM.length - 1].date
       ).toLocaleString();
     },
     maxSpeedGSM() {
-      return Math.max(...this.getGSM.map(l => Number(l.speed))) ?? 0;
+      const values = [
+        ...this.getGSM
+          .filter(l => l.speed != undefined && l.speed != null && l.speed >= 0)
+          .map(l => Number(l.speed))
+      ];
+      if (values.length > 0) return Math.max(values) ?? 0;
+      else return 0;
     },
     averageSpeedGSM() {
-      let values = [...this.getGSM.map(l => Number(l.speed))];
+      let values = [
+        ...this.getGSM
+          .filter(l => l.speed != undefined && l.speed != null && l.speed >= 0)
+          .map(l => Number(l.speed))
+      ];
       let sum = values.reduce((previous, current) => (current += previous));
       let avg = sum / values.length;
       return avg ?? 0;
     },
     minSpeedGSM() {
-      return Math.min(...this.getGSM.map(l => Number(l.speed))) ?? 0;
+      const values = [
+        ...this.getGSM
+          .filter(l => l.speed != undefined && l.speed != null && l.speed >= 0)
+          .map(l => Number(l.speed))
+      ];
+      if (values.length > 0) return Math.min(values) ?? 0;
+      else return 0;
     }
   }
 };

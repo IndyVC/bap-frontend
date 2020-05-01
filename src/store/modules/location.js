@@ -62,6 +62,7 @@ const mutations = {
           speed: loc.speed,
           satellites: loc.satellites,
           device: loc.device,
+          method: loc.method,
         };
       });
   },
